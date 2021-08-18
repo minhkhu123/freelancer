@@ -12,6 +12,7 @@ import 'package:get/get.dart';
 class RegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
     return SafeArea(
         child: Scaffold(
       backgroundColor: AppColors.white,
@@ -89,7 +90,10 @@ class RegisterScreen extends StatelessWidget {
                     SizedBox(height: 30),
                     CustomButtonAuth(
                       title: 'Đăng ký',
-                      onPressed: () {},
+                      onPressed: () {
+                        controller.register();
+                      },
+                      width: width * 0.7,
                     ),
                     SizedBox(height: 40),
                     Row(

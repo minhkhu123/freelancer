@@ -5,17 +5,17 @@ import 'package:get/get.dart';
 
 class CustomButtonAuth extends StatelessWidget {
   final String title;
+  final width;
   final VoidCallback onPressed;
 
-  CustomButtonAuth({Key key, this.title, this.onPressed});
+  CustomButtonAuth({Key key, this.title, this.width, this.onPressed});
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
     return GestureDetector(
       onTap: onPressed,
       child: Container(
-        width: width * 0.7,
+        width: width,
         height: height * 0.07,
         decoration: BoxDecoration(
           color: AppColors.blue,

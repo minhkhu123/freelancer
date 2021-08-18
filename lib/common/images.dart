@@ -15,5 +15,9 @@ class Images {
   static const String ic_add_folder = _img_ + 'ic_add_folder.png';
   static const String ic_product_code = _img_ + 'ic_product_code.png';
   static const String ic_money = _img_ + 'ic_money.png';
+  static const String ic_checked = _img_ + 'ic_checked.png';
+  static const String ic_unchecked = _img_ + 'ic_unchecked.png';
+  static const String ic_camera = _img_ + 'ic_camera.png';
+  static const String ic_gallery = _img_ + 'ic_gallery.png';
   static const String nike = _img_ + 'nike.jpg';
 }

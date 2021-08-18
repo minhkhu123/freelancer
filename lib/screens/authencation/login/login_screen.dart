@@ -15,6 +15,7 @@ import 'package:get/get.dart';
 class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
     return SafeArea(
         child: Scaffold(
           backgroundColor: Colors.white,
@@ -60,8 +61,9 @@ class LoginScreen extends StatelessWidget {
                 CustomButtonAuth(
                   title: 'Đăng nhập',
                   onPressed: () {
-                    Get.to(HomeScreen());
+                    controller.login();
                   },
+                  width: width * 0.7,
                 ),
                 SizedBox(height: 40),
                 Row(
@@ -71,6 +73,8 @@ class LoginScreen extends StatelessWidget {
                     InkWell(
                       onTap: () {
                         Get.to(RegisterScreen());
+                        controller.emailTextEditingController.clear();
+                        controller.passwordTextEditingController.clear();
                       },
                       child: Center(
                         child: Text('Đăng ký ngay',style: AppTextStyles.regularW700(context, size: 18,color: AppColors.blue),),

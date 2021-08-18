@@ -27,7 +27,7 @@ class AppColors {
   static const greyBorder = Color(0xFFE0E0E0);
   static const greyDivider = Color(0xFFCACACA);
 
-  static const blue = Color(0xFF3980D4);
+  static const blue = Color(0xFF0091FF);
   static const blue1 = Color(0xFFF2F8FE);
   static const blue2 = Color(0xFF5990FF);
   static const blue3 = Color(0xFFEFF7FB);
