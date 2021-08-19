@@ -9,8 +9,11 @@ class ImageFile extends StatelessWidget {
   final String title;
   final String money;
   final VoidCallback onPress;
+  final VoidCallback like;
+  final VoidCallback delete;
+  final String urlImage;
 
-  const ImageFile({Key key, this.title, this.money, this.onPress}) : super(key: key);
+  const ImageFile({Key key, this.title, this.money, this.onPress, this.like, this.delete, this.urlImage}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
@@ -35,20 +38,23 @@ class ImageFile extends StatelessWidget {
                     Container(
                         height: height * 0.2,
                         width: width * 0.6,
-                        child: Image.asset(Images.nike)),
+                        child: Image.network(urlImage)),
                     SizedBox(height: 20),
                     Positioned(
                       top: 3,
                       left: 13,
-                      child: Container(
-                          height: 20,
-                          width: 20,
-                          padding: EdgeInsets.all(3),
-                          decoration: BoxDecoration(
-                            color: AppColors.red1,
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                          child: SvgPicture.asset(Images.ic_heart,color: AppColors.white,)
+                      child: GestureDetector(
+                        onTap: like,
+                        child: Container(
+                            height: 20,
+                            width: 20,
+                            padding: EdgeInsets.all(3),
+                            decoration: BoxDecoration(
+                              color: AppColors.red1,
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                            child: SvgPicture.asset(Images.ic_heart,color: AppColors.white,)
+                        ),
                       ),
                     ),
                   ],
@@ -71,10 +77,13 @@ class ImageFile extends StatelessWidget {
           Positioned(
             top: -2,
             right: 10,
-            child: Container(
-                height: 20,
-                width: 20,
-                child: SvgPicture.asset(Images.ic_delete)
+            child: GestureDetector(
+              onTap: delete,
+              child: Container(
+                  height: 20,
+                  width: 20,
+                  child: SvgPicture.asset(Images.ic_delete)
+              ),
             ),
           ),
         ],

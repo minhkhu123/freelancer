@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class FolderModel{
   static const ID = "id";
   static const NAME = "name";
@@ -5,12 +7,12 @@ class FolderModel{
 
   String id;
   String name;
-  bool favorite;
+  String favorite;
 
   FolderModel({this.id, this.name, this.favorite});
 
-  FolderModel.fromMap(Map<String, dynamic> data){
-    id = data[ID];
+  FolderModel.fromMap(DocumentSnapshot data){
+    id = data.id;
     name = data[NAME];
     favorite = data[FAVORITE];
   }

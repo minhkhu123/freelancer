@@ -103,7 +103,7 @@ class DialogFolder extends StatelessWidget {
                       width: width * 0.6,
                       height: 50,
                       child: TextFormField(
-                        // controller: widget.textEditingController,
+                        controller: controller.nameFolderTextEditingController,
                         style: TextStyle(fontWeight: FontWeight.w400,fontSize: 16,color: AppColors.hintText),
                         decoration: InputDecoration(
                           hintText: 'Nhập tên Folder',
@@ -134,9 +134,7 @@ class DialogFolder extends StatelessWidget {
                         width: width * 0.3,
                         title: 'Đồng ý',
                         onPressed: () {
-                          Get.back();
-                          controller.folder.value = 0;
-                          controller.checkFolder();
+                          controller.addFolder(controller.nameFolderTextEditingController.text, '', controller.folder.value.toString());
                         },
                       ),
                       SizedBox(width: 10),

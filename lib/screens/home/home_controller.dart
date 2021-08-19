@@ -1,15 +1,20 @@
 import 'dart:io';
 
 import 'package:album_app/common/models/folder.dart';
+import 'package:album_app/common/models/image.dart';
 import 'package:album_app/constants/firebase.dart';
 import 'package:album_app/routes/app_pages.dart';
+import 'package:album_app/widges/dialog_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 class HomeController extends GetxController {
-  RxList<FolderModel> folderModel = RxList<FolderModel>([]);
+  RxList<FolderModel> folderModel = <FolderModel>[].obs;
   String collectionFolder = 'folder';
+  RxList<ImageModel> imageModel = RxList<ImageModel>();
+  String collectionImage = 'image';
+  List<ImageModel> get images => imageModel.value;
 
   TextEditingController searchFolderTextEditingController = TextEditingController();
 
@@ -26,6 +31,10 @@ class HomeController extends GetxController {
   TextEditingController moneyTextEditingController = TextEditingController();
 
   String get money => moneyTextEditingController.text;
+
+  TextEditingController nameFolderTextEditingController = TextEditingController();
+
+  String get nameFolderList => nameFolderTextEditingController.text;
 
   RxInt folder = 0.obs;
   File imageIn;
@@ -75,22 +84,53 @@ class HomeController extends GetxController {
   void onInit() async {
     searchFolderTextEditingController.addListener(() {});
     searchImageTextEditingController.addListener(() {});
-    // reloadDatabase();
-    folderModel.bindStream(getAllFolder());
+    reloadDatabase();
+    // print('folderModel.bindStream(getAllFolder())');
+    // folderModel.bindStream(getAllFolder());
+    folderModel.refresh();
     print(folderModel.length);
     super.onInit();
   }
 
   Stream<List<FolderModel>> getAllFolder() =>
-      firebaseFirestore.collection(collectionFolder).snapshots().map((query) => query.docs.map((item) => FolderModel.fromMap(item.data())).toList());
+      firebaseFirestore.collection(collectionFolder).snapshots().map((query) => query.docs.map((item) => FolderModel.fromMap(item)).toList());
+
+  // Stream<List<ImageModel>> getAllImage() => firebaseFirestore.collection(collectionImage).snapshots().map
 
   void logOut() async {
     auth.signOut();
-    Get.offNamed(Routes.LOGIN);
+    Get.back();
+    // Get.offNamed(Routes.LOGIN);
   }
 
-  void reloadDatabase() {
+  void reloadDatabase() async {
+    await Future.delayed(Duration(milliseconds: 1));
+    Get.dialog(DialogLoading());
     folderModel.bindStream(getAllFolder());
+    Get.back();
+    update();
+  }
+
+  void addFolder(String name, String id, String favorite) {
+    firebaseFirestore.collection(collectionFolder).add({'name': name, 'favorite': favorite}).whenComplete(() {
+      clearTextField();
+      Get.back();
+      Get.snackbar('Thêm thư mục', 'Bạn đã thêm thư mục thành công');
+    });
+    update();
+  }
+
+  void deleteFolder(String id) {
+    firebaseFirestore.collection(collectionFolder).doc(id).delete().whenComplete(() {
+      Get.back();
+      Get.snackbar('Xóa thư mục', 'Bạn đã xóa thư mục thành công');
+    });
+    update();
+  }
+
+  void clearTextField() {
+    nameFolderTextEditingController.clear();
+    folder.value = 0;
     update();
   }
 }

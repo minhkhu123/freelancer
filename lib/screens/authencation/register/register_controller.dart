@@ -2,6 +2,7 @@ import 'package:album_app/common/models/user.dart';
 import 'package:album_app/constants/firebase.dart';
 import 'package:album_app/routes/app_pages.dart';
 import 'package:album_app/screens/home/home_screen.dart';
+import 'package:album_app/widges/dialog_loading.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -52,16 +53,21 @@ class RegisterController extends GetxController {
   }
 
   void register() async {
+    await Future.delayed(Duration(milliseconds: 1));
+    Get.dialog(DialogLoading());
     try {
       await auth.createUserWithEmailAndPassword(email: email.trim(), password: password.trim()).then((result) {
         String userId = result.user.uid;
         addUserFireStore(userId);
         initializedUserModel(userId);
+        Get.back();
         clearTextField();
-        Get.offNamed(Routes.HOME);
+        Get.toNamed(Routes.HOME);
+        // Get.offNamed(Routes.HOME);
       });
     } catch (e) {
       debugPrint(e.toString());
+      Get.back();
       Get.snackbar('Đăng ký không thành công', 'Xin vui lòng thử lại!');
     }
     update();

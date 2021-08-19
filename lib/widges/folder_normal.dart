@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:album_app/common/images.dart';
 import 'package:album_app/common/theme/app_color.dart';
 import 'package:album_app/common/theme/app_text_style.dart';
@@ -7,9 +9,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 class FolderNormal extends StatelessWidget {
   final String title;
   final VoidCallback onPress;
-  final bool favorite;
+  final String favorite;
+  final VoidCallback delete;
+  final VoidCallback top;
 
-  const FolderNormal({Key key, this.title, this.onPress, this.favorite}) : super(key: key);
+  const FolderNormal({Key key, this.title, this.onPress, this.favorite, this.delete, this.top}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +34,7 @@ class FolderNormal extends StatelessWidget {
             ),
             child: Column(
               children: [
-                favorite ? Image.asset(Images.favor_folder) : SvgPicture.asset(Images.folder),
+                favorite == '2' ? Image.asset(Images.favor_folder) : SvgPicture.asset(Images.folder),
                 // Image.asset(Images.favor_folder),
                 SizedBox(height: 10),
                 Text(
@@ -43,7 +47,9 @@ class FolderNormal extends StatelessWidget {
           Positioned(
             top: -2,
             right: 10,
-            child: Container(height: 20, width: 20, child: SvgPicture.asset(Images.ic_delete)),
+            child: InkWell(
+              onTap: delete,
+                child: Container(height: 20, width: 20, child: SvgPicture.asset(Images.ic_delete))),
           ),
           Positioned(
             top: 0,
