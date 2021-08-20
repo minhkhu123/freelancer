@@ -59,27 +59,31 @@ class _HomeScreenState extends State<HomeScreen> {
                 CustomSearchTextField(
                   textEditingController: controller.searchFolderTextEditingController,
                 ),
-                Container(
-                  height: height * 0.74,
-                  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 18),
-                  child: GridView.builder(
-                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 200, childAspectRatio: 3 / 2, crossAxisSpacing: 10, mainAxisSpacing: 10),
-                      itemCount: controller.folderModel.length,
-                      itemBuilder: (BuildContext ctx, index) {
-                        return FolderNormal(
-                          title: controller.folderModel[index].name,
-                          onPress: () {
-                            controller.nameFolder.value = controller.folderModel[index].name;
-                            controller.checkNameFolder();
-                            Get.to(AlbumFolder());
-                          },
-                          favorite: controller.folderModel[index].favorite,
-                          delete: () => Get.dialog(DialogWarning(
-                            onPress: () => controller.deleteFolder(controller.folderModel[index].id),
-                          )),
-                        );
-                      }),
+                Obx(() => Container(
+                    height: height * 0.74,
+                    margin: EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+                    child: GridView.builder(
+                        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 200, childAspectRatio: 3 / 2, crossAxisSpacing: 10, mainAxisSpacing: 10),
+                        itemCount: controller.folderModel.length,
+                        itemBuilder: (BuildContext ctx, index) {
+                          return FolderNormal(
+                            title: controller.folderModel[index].name,
+                            onPress: () {
+                              controller.nameFolder.value = controller.folderModel[index].name;
+                              controller.checkNameFolder();
+                              controller.getDataImage(controller.folderModel[index].id);
+                              controller.folderId = controller.folderModel[index].id;
+                              Get.to(AlbumFolder());
+                            },
+                            favorite: controller.folderModel[index].favorite,
+                            delete: () => Get.dialog(DialogWarning(
+                              isWhat: true,
+                              onPress: () => controller.deleteFolder(controller.folderModel[index].id),
+                            )),
+                          );
+                        }),
+                  ),
                 ),
               ],
             ),

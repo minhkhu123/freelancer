@@ -11,7 +11,7 @@ class FolderModel{
 
   FolderModel({this.id, this.name, this.favorite});
 
-  FolderModel.fromMap(DocumentSnapshot data){
+  FolderModel.fromDocumentSnapshot(DocumentSnapshot data){
     id = data.id;
     name = data[NAME];
     favorite = data[FAVORITE];

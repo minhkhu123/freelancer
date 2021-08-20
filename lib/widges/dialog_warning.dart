@@ -10,8 +10,9 @@ import 'package:get/get_state_manager/src/simple/get_state.dart';
 
 class DialogWarning extends StatelessWidget {
   final VoidCallback onPress;
+  final bool isWhat;
 
-  const DialogWarning({Key key, this.onPress}) : super(key: key);
+  const DialogWarning({Key key, this.onPress, this.isWhat}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
@@ -51,7 +52,7 @@ class DialogWarning extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 25),
-                  Center(child: Text('Bạn chắc chắn muốn xóa thư mục này chứ?',style: AppTextStyles.regularW500(context, size: 16,color: AppColors.black),)),
+                  Center(child: Text(isWhat ? 'Bạn chắc chắn muốn xóa thư mục này chứ?' : 'Bạn chắc chắn muốn xóa ảnh này chứ?',style: AppTextStyles.regularW500(context, size: 16,color: AppColors.black),)),
                   SizedBox(height: 30),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,

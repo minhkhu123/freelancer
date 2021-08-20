@@ -51,7 +51,9 @@ class DialogImage extends StatelessWidget {
                   SizedBox(height: 10),
                   InkWell(
                     onTap: () {
+                      Get.back();
                       controller.imgFromCamera();
+                      Get.dialog(DialogCreateInfoImg());
                     },
                     child: Container(
                       height: 50,
@@ -101,7 +103,9 @@ class DialogImage extends StatelessWidget {
                   SizedBox(height: 20),
                   InkWell(
                     onTap: () {
+                      Get.back();
                       controller.imgMultiFromGallery();
+                      Get.dialog(DialogCreateInfoImg());
                     },
                     child: Container(
                       height: 50,

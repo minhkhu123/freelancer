@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const orange = Color(0xFFF89820);
+  static const orange = Color(0xA6F89820);
   static const orange2 = Color(0xFFFFC700);
   static const red = Color(0xFFFF4531);
   static const red1 = Color(0x73FF4531);

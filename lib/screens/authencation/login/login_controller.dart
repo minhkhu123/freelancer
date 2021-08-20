@@ -43,8 +43,8 @@ class LoginController extends GetxController {
     super.onInit();
   }
 
-  Stream<List<FolderModel>> getAllFolder() =>
-      firebaseFirestore.collection(collectionFolder).snapshots().map((query) => query.docs.map((item) => FolderModel.fromMap(item)).toList());
+  // Stream<List<FolderModel>> getAllFolder() =>
+  //     firebaseFirestore.collection(collectionFolder).snapshots().map((query) => query.docs.map((item) => FolderModel.fromDocumentSnapshot(item)).toList());
 
   void login() async {
     await Future.delayed(Duration(milliseconds: 1));
@@ -53,7 +53,7 @@ class LoginController extends GetxController {
       await auth.signInWithEmailAndPassword(email: email.trim(), password: password.trim()).then((result) {
         String userId = result.user.uid;
         initializedUserModel(userId);
-        folderModel.bindStream(getAllFolder());
+        // folderModel.bindStream(getAllFolder());
         Get.back();
         clearTextField();
         Get.toNamed(Routes.HOME);

@@ -11,16 +11,16 @@ class ImageModel{
   String image;
   bool liked;
   String name;
-  int price;
+  String price;
 
   ImageModel({this.id, this.image, this.liked, this.name, this.price});
 
   ImageModel.fromDocumentSnapshot(DocumentSnapshot data){
     id = data.id;
-    image = data[IMAGE];
-    liked = data[LIKED];
-    name = data[NAME];
-    price = data[PRICE].toInt();
+    image = (data.data() as Map)[IMAGE];
+    liked = (data.data() as Map)[LIKED];
+    name = (data.data()  as Map)[NAME];
+    price = (data.data()  as Map)[PRICE];
   }
 
 }

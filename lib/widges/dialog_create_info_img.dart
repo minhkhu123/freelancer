@@ -80,9 +80,7 @@ class DialogCreateInfoImg extends StatelessWidget {
                         width: width * 0.3,
                         title: 'Tạo thông tin',
                         onPressed: () {
-                          Get.back();
-                          controller.codeTextEditingController.clear();
-                          controller.moneyTextEditingController.clear();
+                          controller.addImage(controller.folderId, controller.codeTextEditingController.text, controller.moneyTextEditingController.text, false);
                         },
                       ),
                       SizedBox(width: 10),
