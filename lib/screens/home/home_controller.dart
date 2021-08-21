@@ -13,11 +13,19 @@ import 'package:image_picker/image_picker.dart';
 
 class HomeController extends GetxController {
   RxList<FolderModel> folderModel = <FolderModel>[].obs;
+  RxList<FolderModel> favoriteFolderModel = <FolderModel>[].obs;
   String collectionFolder = 'folder';
   RxList<ImageModel> imageModel = RxList<ImageModel>();
   String collectionImage = 'image';
 
+  List<FolderModel> get favorites => favoriteFolderModel.value;
+
+  List<FolderModel> get folders => folderModel.value;
+
   List<ImageModel> get images => imageModel.value;
+  List<ImageModel> imagesSearch = [];
+  List<FolderModel> foldersSearch = [];
+  List<FolderModel> favoriteFolders = [];
 
   TextEditingController searchFolderTextEditingController = TextEditingController();
 
@@ -43,7 +51,13 @@ class HomeController extends GetxController {
   File imageIn;
   List<XFile> imageFileList;
   RxString nameFolder = ''.obs;
-  String folderId = '';
+  RxString folderId = ''.obs;
+  RxString favoriteId = ''.obs;
+
+  void checkFolderID() {
+    folderId.value;
+    update();
+  }
 
   void checkNameFolder() {
     nameFolder.value;
@@ -52,6 +66,11 @@ class HomeController extends GetxController {
 
   void checkFolder() {
     folder.value;
+    update();
+  }
+
+  void checkFavorite() {
+    favoriteId.value;
     update();
   }
 
@@ -84,11 +103,14 @@ class HomeController extends GetxController {
     searchImageTextEditingController.addListener(() {});
     reloadDatabase();
     folderModel.refresh();
+    print(folderModel.length);
     super.onInit();
   }
 
   Stream<List<FolderModel>> getAllFolder() => firebaseFirestore
       .collection(collectionFolder)
+      .where('dateCreated')
+      .orderBy('noted', descending: true)
       .snapshots()
       .map((query) => query.docs.map((item) => FolderModel.fromDocumentSnapshot(item)).toList());
 
@@ -96,9 +118,15 @@ class HomeController extends GetxController {
       .collection(collectionFolder)
       .doc(uid)
       .collection(collectionImage)
-      .orderBy("name")
+      .orderBy("dateCreated", descending: true)
       .snapshots()
       .map((query) => query.docs.map((item) => ImageModel.fromDocumentSnapshot(item)).toList());
+
+  Stream<List<FolderModel>> getFavoriteFolders() => firebaseFirestore
+      .collection(collectionFolder)
+      .where('favorite', isEqualTo: '2')
+      .snapshots()
+      .map((query) => query.docs.map((item) => FolderModel.fromDocumentSnapshot(item)).toList());
 
   void logOut() async {
     // auth.signOut();
@@ -115,9 +143,8 @@ class HomeController extends GetxController {
   void reloadDatabase() async {
     await Future.delayed(Duration(milliseconds: 1));
     Get.dialog(DialogLoading());
-    // String uid = 'V1uGJw5Sx4fArEqzBNrQ';
     folderModel.bindStream(getAllFolder());
-    // imageModel.bindStream(getAllImage(id));
+    getSearchListFolder();
     Get.back();
     update();
   }
@@ -126,9 +153,13 @@ class HomeController extends GetxController {
     firebaseFirestore.collection(collectionFolder).add({
       'name': name,
       'favorite': favorite,
+      'dateCreated': Timestamp.now(),
+      'noted': 0,
     }).whenComplete(() {
       print(firebaseFirestore.collection(collectionFolder).id);
       clearTextField();
+      foldersSearch.clear();
+      foldersSearch.addAll(folders);
       Get.back();
       Get.snackbar('Thêm thư mục', 'Bạn đã thêm thư mục thành công');
     });
@@ -137,8 +168,23 @@ class HomeController extends GetxController {
 
   void deleteFolder(String id) {
     firebaseFirestore.collection(collectionFolder).doc(id).delete().whenComplete(() {
+      foldersSearch.clear();
+      foldersSearch.addAll(folders);
+      update();
       Get.back();
       Get.snackbar('Xóa thư mục', 'Bạn đã xóa thư mục thành công');
+    });
+    update();
+  }
+
+  void updateFolder(String id, int noted) {
+    firebaseFirestore.collection(collectionFolder).doc(id).update({
+      'noted': noted,
+    }).whenComplete(() {
+      foldersSearch.clear();
+      foldersSearch.addAll(folders);
+      update();
+      print('note thành công');
     });
     update();
   }
@@ -148,12 +194,18 @@ class HomeController extends GetxController {
     Get.dialog(DialogLoading());
     var taskSnapshot = await firebase_storage.FirebaseStorage.instance.ref().child(imageIn.path.split('/').last).putFile(imageIn);
     final String downloadUrl = await taskSnapshot.ref.getDownloadURL();
-    await firebaseFirestore
-        .collection(collectionFolder)
-        .doc(folderId)
-        .collection(collectionImage)
-        .add({'name': code, 'price': price, 'image': downloadUrl, 'liked': liked}).whenComplete(() {
+    await firebaseFirestore.collection(collectionFolder).doc(folderId).collection(collectionImage).add({
+      'name': code,
+      'price': price,
+      'image': downloadUrl,
+      'liked': liked,
+      'dateCreated': Timestamp.now(),
+      'favoriteFolder': '',
+      'favoriteId': '',
+    }).whenComplete(() {
       clearTextField();
+      imagesSearch.clear();
+      imagesSearch.addAll(images);
       Get.back();
       Get.back();
       Get.snackbar('Thêm ảnh', 'Bạn đã thêm ảnh thành công');
@@ -163,8 +215,81 @@ class HomeController extends GetxController {
 
   void deleteImage(String folderId, String id) {
     firebaseFirestore.collection(collectionFolder).doc(folderId).collection(collectionImage).doc(id).delete().whenComplete(() {
+      imagesSearch.clear();
+      imagesSearch.addAll(images);
+      update();
       Get.back();
       Get.snackbar('Xóa ảnh', 'Bạn đã xóa ảnh thành công');
+    });
+    update();
+  }
+
+  Future<void> getSearchListImage() async {
+    if (searchImage == '' || searchImage.isEmpty) {
+      imagesSearch = [];
+      imagesSearch.addAll(images);
+    } else {
+      imagesSearch = [];
+      update();
+      for (int i = 0; i < images.length; i++) {
+        if (images.elementAt(i).name.toString().toLowerCase().contains(searchImage.toLowerCase())) {
+          imagesSearch.add(images[i]);
+        }
+      }
+    }
+    update();
+  }
+
+  Future<void> getSearchListFolder() async {
+    if (searchFolder == '' || searchFolder.isEmpty) {
+      foldersSearch = [];
+      foldersSearch.addAll(folders);
+    } else {
+      foldersSearch = [];
+      update();
+      for (int i = 0; i < folders.length; i++) {
+        if (folders.elementAt(i).name.toString().toLowerCase().contains(searchFolder.toLowerCase())) {
+          foldersSearch.add(folders[i]);
+        }
+      }
+    }
+    update();
+  }
+
+  void bindFavoriteFolder() {
+    favoriteFolderModel.bindStream(getFavoriteFolders());
+    update();
+  }
+
+  void addImageToFavorite(String folderID, String code, String price, String urlImage) async {
+    await Future.delayed(Duration(milliseconds: 1));
+    Get.dialog(DialogLoading());
+    await firebaseFirestore.collection(collectionFolder).doc(folderID).collection(collectionImage).add({
+      'name': code,
+      'image': urlImage,
+      'price': price,
+      'liked': true,
+      'dateCreated': Timestamp.now(),
+    }).whenComplete(() {
+      clearTextField();
+      images.clear();
+      imagesSearch.clear();
+      getDataImage(folderId.value);
+      favoriteId.value = '';
+      Get.back();
+      Get.back();
+      Get.snackbar('Thêm ảnh yêu thích', 'Bạn đã thêm ảnh vào mục yêu thích thành công');
+    });
+    // update();
+  }
+
+  void updateImage(String folderId,String id, bool liked) {
+    firebaseFirestore.collection(collectionFolder).doc(folderId).collection(collectionImage).doc(id).update({
+      'liked': liked,
+    }).whenComplete(() {
+      imagesSearch.clear();
+      imagesSearch.addAll(images);
+      update();
     });
     update();
   }

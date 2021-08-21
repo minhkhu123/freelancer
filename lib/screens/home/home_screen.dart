@@ -20,6 +20,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   DateTime currentBackPressTime;
+
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -58,33 +59,79 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(height: 10),
                 CustomSearchTextField(
                   textEditingController: controller.searchFolderTextEditingController,
+                  onChanged: (value) {
+                    controller.getSearchListFolder();
+                  },
                 ),
-                Obx(() => Container(
-                    height: height * 0.74,
-                    margin: EdgeInsets.symmetric(horizontal: 16, vertical: 18),
-                    child: GridView.builder(
-                        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 200, childAspectRatio: 3 / 2, crossAxisSpacing: 10, mainAxisSpacing: 10),
-                        itemCount: controller.folderModel.length,
-                        itemBuilder: (BuildContext ctx, index) {
-                          return FolderNormal(
-                            title: controller.folderModel[index].name,
-                            onPress: () {
-                              controller.nameFolder.value = controller.folderModel[index].name;
-                              controller.checkNameFolder();
-                              controller.getDataImage(controller.folderModel[index].id);
-                              controller.folderId = controller.folderModel[index].id;
-                              Get.to(AlbumFolder());
-                            },
-                            favorite: controller.folderModel[index].favorite,
-                            delete: () => Get.dialog(DialogWarning(
-                              isWhat: true,
-                              onPress: () => controller.deleteFolder(controller.folderModel[index].id),
-                            )),
-                          );
-                        }),
-                  ),
-                ),
+                controller.foldersSearch.length == 0
+                    ? Obx(
+                        () => Container(
+                          height: height * 0.74,
+                          margin: EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+                          child: GridView.builder(
+                              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                                  maxCrossAxisExtent: 200, childAspectRatio: 3 / 2, crossAxisSpacing: 10, mainAxisSpacing: 10),
+                              itemCount: controller.folders.length,
+                              itemBuilder: (BuildContext ctx, index) {
+                                return FolderNormal(
+                                  title: controller.folders[index].name,
+                                  onPress: () {
+                                    controller.nameFolder.value = controller.folders[index].name;
+                                    controller.checkNameFolder();
+                                    controller.folderId.value = controller.folders[index].id;
+                                    controller.checkFolderID();
+                                    controller.getDataImage(controller.folderId.value);
+                                    controller.getSearchListImage();
+                                    Get.to(AlbumFolder());
+                                  },
+                                  noted: controller.folders[index].noted,
+                                  favorite: controller.folders[index].favorite,
+                                  top: () {
+                                    int.parse(controller.folders[index].noted) == 0
+                                        ? controller.updateFolder(controller.folders[index].id, 1)
+                                        : controller.updateFolder(controller.folders[index].id, 0);
+                                  },
+                                  delete: () => Get.dialog(DialogWarning(
+                                    isWhat: true,
+                                    onPress: () => controller.deleteFolder(controller.folders[index].id),
+                                  )),
+                                );
+                              }),
+                        ),
+                      )
+                    : Container(
+                        height: height * 0.74,
+                        margin: EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+                        child: GridView.builder(
+                            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                                maxCrossAxisExtent: 200, childAspectRatio: 3 / 2, crossAxisSpacing: 10, mainAxisSpacing: 10),
+                            itemCount: controller.foldersSearch.length,
+                            itemBuilder: (BuildContext ctx, index) {
+                              return FolderNormal(
+                                title: controller.foldersSearch[index].name,
+                                onPress: () {
+                                  controller.nameFolder.value = controller.foldersSearch[index].name;
+                                  controller.checkNameFolder();
+                                  controller.folderId.value = controller.foldersSearch[index].id;
+                                  controller.checkFolderID();
+                                  controller.getDataImage(controller.folderId.value);
+                                  controller.getSearchListImage();
+                                  Get.to(AlbumFolder());
+                                },
+                                noted: controller.foldersSearch[index].noted,
+                                favorite: controller.foldersSearch[index].favorite,
+                                top: () {
+                                  int.parse(controller.foldersSearch[index].noted) == 0
+                                      ? controller.updateFolder(controller.foldersSearch[index].id, 1)
+                                      : controller.updateFolder(controller.foldersSearch[index].id, 0);
+                                },
+                                delete: () => Get.dialog(DialogWarning(
+                                  isWhat: true,
+                                  onPress: () => controller.deleteFolder(controller.foldersSearch[index].id),
+                                )),
+                              );
+                            }),
+                      ),
               ],
             ),
           ),

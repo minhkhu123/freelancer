@@ -12,8 +12,9 @@ class FolderNormal extends StatelessWidget {
   final String favorite;
   final VoidCallback delete;
   final VoidCallback top;
+  final String noted;
 
-  const FolderNormal({Key key, this.title, this.onPress, this.favorite, this.delete, this.top}) : super(key: key);
+  const FolderNormal({Key key, this.title, this.onPress, this.favorite, this.delete, this.top, this.noted}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -47,21 +48,26 @@ class FolderNormal extends StatelessWidget {
           Positioned(
             top: -2,
             right: 10,
-            child: InkWell(
-              onTap: delete,
-                child: Container(height: 20, width: 20, child: SvgPicture.asset(Images.ic_delete))),
+            child: InkWell(onTap: delete, child: Container(height: 20, width: 20, child: SvgPicture.asset(Images.ic_delete))),
           ),
           Positioned(
-            top: 0,
-            left: 3,
-            child: Container(
+            top: 5,
+            left: 7,
+            child: InkWell(
+              onTap: top,
+              child: Container(
                 height: 20,
                 width: 20,
-                child: IconButton(
-                  icon: Icon(
-                    Icons.star_border,
-                  ),
-                )),
+                child: noted == '1'
+                    ? Icon(
+                        Icons.star,
+                        color: Colors.yellow,
+                      )
+                    : Icon(
+                        Icons.star_border,
+                      ),
+              ),
+            ),
           ),
         ],
       ),
