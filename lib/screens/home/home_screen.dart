@@ -79,6 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     controller.nameFolder.value = controller.folders[index].name;
                                     controller.checkNameFolder();
                                     controller.folderId.value = controller.folders[index].id;
+                                    controller.favoriteCheck.value = controller.folders[index].favorite;
                                     controller.checkFolderID();
                                     controller.getDataImage(controller.folderId.value);
                                     controller.getSearchListImage();
@@ -113,6 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   controller.nameFolder.value = controller.foldersSearch[index].name;
                                   controller.checkNameFolder();
                                   controller.folderId.value = controller.foldersSearch[index].id;
+                                  controller.favoriteCheck.value = controller.foldersSearch[index].favorite;
                                   controller.checkFolderID();
                                   controller.getDataImage(controller.folderId.value);
                                   controller.getSearchListImage();

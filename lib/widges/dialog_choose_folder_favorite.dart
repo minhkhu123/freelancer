@@ -60,7 +60,7 @@ class DialogChooseFolderFavorite extends StatelessWidget {
                         itemBuilder: (context, index) => FavoriteFolderTile(
                           name: controller.favorites[index].name,
                           onPress: () {
-                            controller.favoriteId.value = controller.favorites[index].id;
+                            controller.favoriteFolderId.value = controller.favorites[index].id;
                             controller.checkFavorite();
                           },
                           index: index,
@@ -82,7 +82,7 @@ class DialogChooseFolderFavorite extends StatelessWidget {
                         title: 'Hủy',
                         onPressed: () {
                           Get.back();
-                          controller.favoriteId.value = '';
+                          controller.favoriteFolderId.value = '';
                         },
                       ),
                     ],

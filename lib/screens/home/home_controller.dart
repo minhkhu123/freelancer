@@ -4,6 +4,7 @@ import 'package:album_app/common/models/folder.dart';
 import 'package:album_app/common/models/image.dart';
 import 'package:album_app/constants/firebase.dart';
 import 'package:album_app/routes/app_pages.dart';
+import 'package:album_app/widges/dialog_create_info_img.dart';
 import 'package:album_app/widges/dialog_loading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
@@ -52,10 +53,25 @@ class HomeController extends GetxController {
   List<XFile> imageFileList;
   RxString nameFolder = ''.obs;
   RxString folderId = ''.obs;
+  RxString favoriteFolderId = ''.obs;
+  RxString favoriteCheck = ''.obs;
   RxString favoriteId = ''.obs;
+  RxString imageId = ''.obs;
+  RxBool isMulti = false.obs;
+
+  void checkMulti() {
+    isMulti.value;
+    update();
+  }
+
+  void checkImageID() {
+    imageId.value;
+    update();
+  }
 
   void checkFolderID() {
     folderId.value;
+    favoriteCheck.value;
     update();
   }
 
@@ -70,6 +86,11 @@ class HomeController extends GetxController {
   }
 
   void checkFavorite() {
+    favoriteFolderId.value;
+    update();
+  }
+
+  void checkFavoriteId() {
     favoriteId.value;
     update();
   }
@@ -80,6 +101,7 @@ class HomeController extends GetxController {
     final image = await _picker.pickImage(source: ImageSource.camera);
 
     imageIn = File(image.path);
+    Get.dialog(DialogCreateInfoImg());
     update();
   }
 
@@ -87,6 +109,7 @@ class HomeController extends GetxController {
     final XFile image = await _picker.pickImage(source: ImageSource.gallery);
 
     imageIn = File(image.path);
+    Get.dialog(DialogCreateInfoImg());
     update();
   }
 
@@ -94,6 +117,7 @@ class HomeController extends GetxController {
     final images = await _picker.pickMultiImage();
 
     imageFileList = images;
+    Get.dialog(DialogCreateInfoImg());
     update();
   }
 
@@ -202,6 +226,9 @@ class HomeController extends GetxController {
       'dateCreated': Timestamp.now(),
       'favoriteFolder': '',
       'favoriteId': '',
+      'oldFolder': '',
+      'oldId': '',
+      'origin': true,
     }).whenComplete(() {
       clearTextField();
       imagesSearch.clear();
@@ -213,14 +240,49 @@ class HomeController extends GetxController {
     update();
   }
 
-  void deleteImage(String folderId, String id) {
-    firebaseFirestore.collection(collectionFolder).doc(folderId).collection(collectionImage).doc(id).delete().whenComplete(() {
+  void deleteImage(String folderID, String id) async {
+    await Future.delayed(Duration(milliseconds: 1));
+    Get.dialog(DialogLoading());
+    firebaseFirestore.collection(collectionFolder).doc(folderID).collection(collectionImage).doc(id).delete().whenComplete(() {
+      images.clear();
       imagesSearch.clear();
-      imagesSearch.addAll(images);
+      getDataImage(folderId.value);
       update();
+      Get.back();
+      Get.back();
       Get.back();
       Get.snackbar('Xóa ảnh', 'Bạn đã xóa ảnh thành công');
     });
+    update();
+  }
+
+  void addMultiImage(String folderId, String code, String price, bool liked) async {
+    // for (int i = 0; i < imageFileList.length; i++) {
+      for (var img in imageFileList) {
+        var taskSnapshot = await firebase_storage.FirebaseStorage.instance.ref().child(img.path.split('/').last).putFile(File(img.path));
+        final String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+        await firebaseFirestore.collection(collectionFolder).doc(folderId).collection(collectionImage).add({
+          'name': code,
+          'price': price,
+          'image': downloadUrl,
+          'liked': liked,
+          'dateCreated': Timestamp.now(),
+          'favoriteFolder': '',
+          'favoriteId': '',
+          'oldFolder': '',
+          'oldId': '',
+          'origin': true,
+        }).whenComplete(() {
+          print('imageFileList.length');
+          print(imageFileList.length);
+          clearTextField();
+          imagesSearch.clear();
+          imagesSearch.addAll(images);
+          Get.back();
+          Get.snackbar('Thêm ảnh', 'Bạn đã thêm ảnh thành công');
+        });
+      }
+    // }
     update();
   }
 
@@ -261,7 +323,8 @@ class HomeController extends GetxController {
     update();
   }
 
-  void addImageToFavorite(String folderID, String code, String price, String urlImage) async {
+  void addImageToFavorite(
+      String folderID, String code, String price, String urlImage, String oldFolder, String oldId, String favoriteFolder, String favoriteID) async {
     await Future.delayed(Duration(milliseconds: 1));
     Get.dialog(DialogLoading());
     await firebaseFirestore.collection(collectionFolder).doc(folderID).collection(collectionImage).add({
@@ -270,22 +333,39 @@ class HomeController extends GetxController {
       'price': price,
       'liked': true,
       'dateCreated': Timestamp.now(),
+      'oldFolder': oldFolder,
+      'oldId': oldId,
+      'favoriteFolder': favoriteFolder,
+      'favoriteId': favoriteID,
+      'origin': false,
+    }).then((docRef) {
+      favoriteId.value = docRef.id;
+      checkFavoriteId();
+      print('docRef.id');
+      print(docRef.id);
+      print('favoriteId.value');
+      print(favoriteId.value);
     }).whenComplete(() {
       clearTextField();
       images.clear();
       imagesSearch.clear();
       getDataImage(folderId.value);
-      favoriteId.value = '';
       Get.back();
       Get.back();
       Get.snackbar('Thêm ảnh yêu thích', 'Bạn đã thêm ảnh vào mục yêu thích thành công');
     });
-    // update();
+    imagesSearch.length == 0
+        ? updateImage(folderId.value, imageId.value, true, favoriteFolderId.value, favoriteId.value)
+        : updateImage(folderId.value, imageId.value, true, favoriteFolderId.value, favoriteId.value);
+    favoriteFolderId.value = '';
+    update();
   }
 
-  void updateImage(String folderId,String id, bool liked) {
+  void updateImage(String folderId, String id, bool liked, String favoriteFolder, String favoriteID) {
     firebaseFirestore.collection(collectionFolder).doc(folderId).collection(collectionImage).doc(id).update({
       'liked': liked,
+      'favoriteFolder': favoriteFolder,
+      'favoriteId': favoriteID,
     }).whenComplete(() {
       imagesSearch.clear();
       imagesSearch.addAll(images);

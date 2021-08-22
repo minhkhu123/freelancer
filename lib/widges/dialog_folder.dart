@@ -99,31 +99,31 @@ class DialogFolder extends StatelessWidget {
                           'Tên Folder:',
                           style: AppTextStyles.regularW500(context, size: 16, color: AppColors.black),
                         ),
-                    Container(
-                      width: width * 0.6,
-                      height: 50,
-                      child: TextFormField(
-                        controller: controller.nameFolderTextEditingController,
-                        style: TextStyle(fontWeight: FontWeight.w400,fontSize: 16,color: AppColors.hintText),
-                        decoration: InputDecoration(
-                          hintText: 'Nhập tên Folder',
-                          hintStyle: TextStyle(color: AppColors.hintText),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.transparent),
-                            borderRadius: BorderRadius.circular(10),
+                        Container(
+                          width: width * 0.6,
+                          height: 50,
+                          child: TextFormField(
+                            controller: controller.nameFolderTextEditingController,
+                            style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16, color: AppColors.hintText),
+                            decoration: InputDecoration(
+                              hintText: 'Nhập tên Folder',
+                              hintStyle: TextStyle(color: AppColors.hintText),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.transparent),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.transparent),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.transparent),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              isDense: true,
+                            ),
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.transparent),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.transparent),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          isDense: true,
-                        ),
-                      ),
-                    )
+                        )
                       ],
                     ),
                   ),
@@ -133,9 +133,11 @@ class DialogFolder extends StatelessWidget {
                       CustomButtonAuth(
                         width: width * 0.3,
                         title: 'Đồng ý',
-                        onPressed: () {
-                          controller.addFolder(controller.nameFolderTextEditingController.text, '', controller.folder.value.toString());
-                        },
+                        onPressed: controller.nameFolderTextEditingController.text.isEmpty || controller.folder.value == 0
+                            ? null
+                            : () {
+                                controller.addFolder(controller.nameFolderTextEditingController.text, '', controller.folder.value.toString());
+                              },
                       ),
                       SizedBox(width: 10),
                       CustomButtonAuth(

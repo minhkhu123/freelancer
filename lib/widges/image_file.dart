@@ -28,7 +28,7 @@ class ImageFile extends StatelessWidget {
             width: width * 0.6,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: AppColors.blue1,
+              color: AppColors.white,
               borderRadius: BorderRadius.circular(20),
             ),
             child: Stack(
@@ -36,10 +36,10 @@ class ImageFile extends StatelessWidget {
                 Container(
                     height: height * 0.23,
                     width: width * 0.5,
-                    child: Image.network(urlImage)),
+                    child: Image.network(urlImage,fit: BoxFit.fill,)),
                 SizedBox(height: 20),
                 Positioned(
-                  top: 3,
+                  top: 5,
                   left: 13,
                   child: InkWell(
                     onTap: like,
@@ -56,16 +56,20 @@ class ImageFile extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  top: 3,
-                    left: 60,
-                    child: Text(title,style: AppTextStyles.regularW500(context, size: 14,color: AppColors.black),),
+                  top: 5,
+                    left: 1,
+                    right: 1,
+                    child: Container(
+                      width: width,
+                        child: Center(child: Text(title,style: AppTextStyles.regularW500(context, size: 14,color: AppColors.black),))),
                 ),
                 Positioned(
                   bottom: 0,
-                    left: 6,
+                    left: 1,
+                    right: 1,
                     child: Container(
                       height: 17,
-                      width: width * 0.41,
+                      width: width,
                       color: AppColors.orange,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,

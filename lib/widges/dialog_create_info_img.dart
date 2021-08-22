@@ -38,9 +38,9 @@ class DialogCreateInfoImg extends StatelessWidget {
                   SizedBox(height: 10),
                   Center(
                       child: Text(
-                        'Tạo thông tin cho ảnh',
-                        style: AppTextStyles.regularW500(context, size: 24, color: AppColors.blue),
-                      )),
+                    'Tạo thông tin cho ảnh',
+                    style: AppTextStyles.regularW500(context, size: 24, color: AppColors.blue),
+                  )),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 5),
                     child: Divider(
@@ -54,14 +54,20 @@ class DialogCreateInfoImg extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Mã sản phẩm:',style: AppTextStyles.regularW500(context, size: 16,color: AppColors.black),),
+                        Text(
+                          'Mã sản phẩm:',
+                          style: AppTextStyles.regularW500(context, size: 16, color: AppColors.black),
+                        ),
                         CustomTextFieldCreateInfo(
                           hintText: 'Nhập mã sản phẩm',
                           surfix: '',
                           textEditingController: controller.codeTextEditingController,
                         ),
                         SizedBox(height: 10),
-                        Text('Giá sản phẩm:',style: AppTextStyles.regularW500(context, size: 16,color: AppColors.black),),
+                        Text(
+                          'Giá sản phẩm:',
+                          style: AppTextStyles.regularW500(context, size: 16, color: AppColors.black),
+                        ),
                         CustomTextFieldCreateInfo(
                           hintText: 'Nhập giá sản phẩm',
                           surfix: 'VNĐ',
@@ -79,9 +85,19 @@ class DialogCreateInfoImg extends StatelessWidget {
                       CustomButtonAuth(
                         width: width * 0.3,
                         title: 'Tạo thông tin',
-                        onPressed: () {
-                          controller.addImage(controller.folderId.value, controller.codeTextEditingController.text, controller.moneyTextEditingController.text, false);
-                        },
+                        onPressed: controller.codeTextEditingController.text.isEmpty || controller.moneyTextEditingController.text.isEmpty
+                            ? null
+                            : controller.isMulti.value
+                                ? () {
+                                    controller.addMultiImage(controller.folderId.value, controller.codeTextEditingController.text,
+                                        controller.moneyTextEditingController.text, false);
+                                    print('multi');
+                                  }
+                                : () {
+                                    controller.addImage(controller.folderId.value, controller.codeTextEditingController.text,
+                                        controller.moneyTextEditingController.text, false);
+                                    print('single');
+                                  },
                       ),
                       SizedBox(width: 10),
                       CustomButtonAuth(

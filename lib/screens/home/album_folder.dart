@@ -29,12 +29,14 @@ class AlbumFolder extends StatelessWidget {
             },
           ),
           actions: [
-            IconButton(
-              onPressed: () {
-                Get.dialog(DialogImage());
-              },
-              icon: Image.asset(Images.ic_add_image),
-            ),
+            controller.favoriteCheck.value == '1'
+                ? IconButton(
+                    onPressed: () {
+                      Get.dialog(DialogImage());
+                    },
+                    icon: Image.asset(Images.ic_add_image),
+                  )
+                : Container(),
           ],
           title: Text(
             controller.nameFolder.value,
@@ -71,18 +73,33 @@ class AlbumFolder extends StatelessWidget {
                                 like: controller.images[index].liked
                                     ? () => null
                                     : () {
-                                  controller.bindFavoriteFolder();
-                                  Get.dialog(DialogChooseFolderFavorite(
-                                    onPress: () {
-                                      controller.addImageToFavorite(controller.favoriteId.value, controller.images[index].name,
-                                          controller.images[index].price, controller.images[index].image);
-                                      controller.updateImage(controller.folderId.value, controller.images[index].id, true);
-                                    },
-                                  ));
-                                },
+                                        controller.bindFavoriteFolder();
+                                        Get.dialog(DialogChooseFolderFavorite(
+                                          onPress: () {
+                                            controller.imageId.value = controller.images[index].id;
+                                            controller.checkImageID();
+                                            controller.addImageToFavorite(
+                                                controller.favoriteFolderId.value,
+                                                controller.images[index].name,
+                                                controller.images[index].price,
+                                                controller.images[index].image,
+                                                controller.folderId.value,
+                                                controller.images[index].id,
+                                                controller.favoriteFolderId.value,
+                                                '');
+                                            // controller.updateImage(controller.folderId.value, controller.images[index].id, true,
+                                            //     controller.favoriteFolderId.value, controller.favoriteId.value);
+                                          },
+                                        ));
+                                      },
                                 delete: () => Get.dialog(DialogWarning(
                                   isWhat: false,
-                                  onPress: () => controller.deleteImage(controller.folderId.value, controller.images[index].id),
+                                  onPress: () {
+                                    controller.deleteImage(controller.folderId.value, controller.images[index].id);
+                                    controller.images[index].origin
+                                        ? controller.deleteImage(controller.images[index].favoriteFolder, controller.images[index].favoriteId)
+                                        : controller.updateImage(controller.images[index].oldFolder, controller.images[index].oldId, false, "", "");
+                                  },
                                 )),
                               );
                             }),
@@ -102,21 +119,36 @@ class AlbumFolder extends StatelessWidget {
                               urlImage: controller.imagesSearch[index].image,
                               isLiked: controller.imagesSearch[index].liked,
                               like: controller.imagesSearch[index].liked
-                                  ?  () => null
+                                  ? () => null
                                   : () {
-                                controller.bindFavoriteFolder();
-                                Get.dialog(DialogChooseFolderFavorite(
-                                  onPress: () {
-                                    controller.addImageToFavorite(controller.favoriteId.value, controller.imagesSearch[index].name,
-                                        controller.imagesSearch[index].price, controller.imagesSearch[index].image);
-                                    controller.updateImage(controller.folderId.value, controller.imagesSearch[index].id, true);
-                                  },
-                                ));
-                              },
+                                      controller.bindFavoriteFolder();
+                                      Get.dialog(DialogChooseFolderFavorite(
+                                        onPress: () {
+                                          controller.imageId.value = controller.imagesSearch[index].id;
+                                          controller.checkImageID();
+                                          controller.addImageToFavorite(
+                                              controller.favoriteFolderId.value,
+                                              controller.imagesSearch[index].name,
+                                              controller.imagesSearch[index].price,
+                                              controller.imagesSearch[index].image,
+                                              controller.folderId.value,
+                                              controller.imagesSearch[index].id,
+                                              controller.favoriteFolderId.value,
+                                              '');
+                                          // controller.updateImage(controller.folderId.value, controller.imagesSearch[index].id, true,
+                                          //     controller.favoriteFolderId.value, controller.favoriteId.value);
+                                        },
+                                      ));
+                                    },
                               delete: () => Get.dialog(DialogWarning(
                                 isWhat: false,
                                 onPress: () {
                                   controller.deleteImage(controller.folderId.value, controller.imagesSearch[index].id);
+                                  controller.imagesSearch[index].origin
+                                      ? controller.deleteImage(
+                                          controller.imagesSearch[index].favoriteFolder, controller.imagesSearch[index].favoriteId)
+                                      : controller.updateImage(
+                                          controller.imagesSearch[index].oldFolder, controller.imagesSearch[index].oldId, false, "", "");
                                 },
                               )),
                             );

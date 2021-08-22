@@ -21,7 +21,7 @@ class FavoriteFolderTile extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-              child: controller.favorites[index].id == controller.favoriteId.value ? Image.asset(Images.ic_checked) : Image.asset(Images.ic_unchecked),
+              child: controller.favorites[index].id == controller.favoriteFolderId.value ? Image.asset(Images.ic_checked) : Image.asset(Images.ic_unchecked),
               // child: Image.asset(Images.ic_unchecked),
             ),
             Text(
