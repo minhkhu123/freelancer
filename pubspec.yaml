@@ -1,4 +1,4 @@
-name: album_app
+name: freelancer_app
 description: A new Flutter application.
 
 # The following line prevents the package from being accidentally published to
@@ -29,23 +29,40 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   flutter_svg: ^0.19.3
-  get: ^4.3.8
-  image_picker: ^0.8.3+2
-  firebase_auth: ^3.0.2
-  cloud_firestore: ^2.5.0
-  firebase_messaging: ^10.0.5
-  firebase_core: ^1.5.0
+  get: ^4.1.3
+  page_view_indicators: ^1.4.0
+  image_picker: ^0.6.6+5
+  file_picker: ^2.1.6
+  flutter_rating_bar: ^4.0.0
+  percent_indicator: ^2.1.7+2
   sp_util: ^2.0.3
+  intl: ^0.17.0
+  dio: ^3.0.10
+  shared_preferences: ^2.0.5
+  json_annotation: ^3.1.1
+  json_serializable: ^3.5.0
+  connectivity: ^2.0.2
   fluttertoast: ^7.1.8
-  firebase_storage: ^10.0.2
-
+  common_utils: ^1.2.1
+  http_parser: ^3.1.4
+  flutter_staggered_grid_view: ^0.4.0
+  cached_network_image: ^2.5.1
+  equatable: ^2.0.2
+  url_launcher: ^6.0.3
+  flutter_launcher_icons: 0.8.1
+  flutter_image_compress: ^1.0.0
+  dotted_border: ^1.0.7
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
-
+flutter_icons:
+  ios: true
+  android: true
+  image_path: "assets/icon_app.png"
 # The following section is specific to Flutter.
 flutter:
 

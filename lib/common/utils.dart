@@ -1,6 +1,10 @@
 
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:freelancer_app/common/constants.dart';
+import 'package:freelancer_app/routes/app_routes.dart';
+import 'package:freelancer_app/screens/authens/wait_login/wait_login_controller.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:sp_util/sp_util.dart';
@@ -21,8 +25,25 @@ class Utils {
         toastLength: toastLength ?? Toast.LENGTH_SHORT);
   }
 
+  Future<bool> checkConnectionInternet() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile) {
+      return true;
+    } else if (connectivityResult == ConnectivityResult.wifi) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   var convert8 = NumberFormat('###,###,###,###,###,###.00000000#', 'en_US');
   var convert2 = NumberFormat('###,###,###,###,###,###.00#', 'en_US');
+
+  static logout() {
+    SpUtil.remove(ConstString.token);
+    // Get.offAllNamed(Routes.WAIT_LOGIN_1);
+    Get.toNamed(Routes.WAIT_LOGIN_1);
+  }
 
   // String checkValidSalary() {
   //   if (salaryWant == "" && checkDeal.value) {

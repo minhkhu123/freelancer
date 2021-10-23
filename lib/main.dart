@@ -1,12 +1,14 @@
-import 'package:album_app/routes/app_pages.dart';
-import 'package:album_app/screens/authencation/login/login_screen.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:freelancer_app/routes/app_routes.dart';
+import 'package:freelancer_app/screens/authens/forgot_password/update_pass_screen.dart';
+import 'package:freelancer_app/screens/authens/register/otp_screen.dart';
+import 'package:freelancer_app/screens/initial_binding.dart';
 import 'package:get/get.dart';
+import 'package:sp_util/sp_util.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await SpUtil.getInstance();
   runApp(MyApp());
 }
 
@@ -17,12 +19,14 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
+      initialBinding: InitialBinding(),
+      defaultTransition: Transition.rightToLeft,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
       getPages: AppPages.routes,
-      initialRoute: AppPages.LOGIN,
-      // home: LoginScreen(),
+      initialRoute: AppPages.LOADING,
+      // home: OTPScreen(),
     );
   }
 }

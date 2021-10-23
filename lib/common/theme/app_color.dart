@@ -2,10 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const orange = Color(0xA6F89820);
+  static const orange = Color(0xFFF89820);
   static const orange2 = Color(0xFFFFC700);
   static const red = Color(0xFFFF4531);
-  static const red1 = Color(0x73FF4531);
   static const white = Color(0xFFFFFFFF);
   static const whiteDot = Color(0xFFE5E5E5);
   static const white1 = Color(0xFFF2FFFF);
@@ -27,7 +26,7 @@ class AppColors {
   static const greyBorder = Color(0xFFE0E0E0);
   static const greyDivider = Color(0xFFCACACA);
 
-  static const blue = Color(0xFF0091FF);
+  static const blue = Color(0xFF3980D4);
   static const blue1 = Color(0xFFF2F8FE);
   static const blue2 = Color(0xFF5990FF);
   static const blue3 = Color(0xFFEFF7FB);
@@ -39,9 +38,25 @@ class AppColors {
   static const hintText96 = Color(0xFF969696);
 
   static const black = Color(0xFF333333);
+  static const black46 = Color(0xFF464646);
+  static const black2 = Color(0xFF182D4B);
+  static const black3 = Color(0xFF575E66);
+  static const black5 = Color(0xFF0E2648);
+  static const black4 = Color(0xFF0C214A);
+  static const black6 = Color(0xFFB5B5B5);
 
-  static const searchBG = Color(0xFFF9F9F9);
-  static const searchHint = Color(0xFF757474);
+  static const green = Color(0xFF3ABB5E);
+  static const green1 = Color(0xFF33A953);
+  static const greenOnline = Color(0xFF89F66D);
+
+  static const line = Color(0x4D3178CE);
+
+  static const linearGradient1 = [Color(0xffF8971C), Color(0xffFCC63C)];
+  static const linearGradient2 = [Color(0xff3980D4), Color(0xff6C9DFF)];
+
+  static const chatYour = Color(0xFFFDE8CE);
+
+  static const percentNot = Color(0xFFDDE6F1);
 }
 // 100% — FF
 // 95% — F2
